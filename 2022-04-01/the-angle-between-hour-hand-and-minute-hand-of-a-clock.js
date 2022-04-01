@@ -7,7 +7,8 @@ function angle(time) {
   let t = time.split(':')
   let h24 = parseInt(t[0])
   let m = parseInt(t[1])
-  let h12 = h24 >= 12 ? h24 - 12 : h24
+  // let h12 = h24 >= 12 ? h24 - 12 : h24
+  let h12 = h24 % 12
   let hAngle = (h12 / 12) * 360
   let mAngle = (m / 60) * 360
   let hAdd = 360 / (12 * 60) // 每分钟时针走的角度
