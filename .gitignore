@@ -1,7 +1,20 @@
-.DS_Store
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
 node_modules/
 unpackage/
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
 dist/
+
+# misc
+.DS_Store
 
 # local env files
 .env.local
