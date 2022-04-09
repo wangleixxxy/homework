@@ -12,6 +12,7 @@
       --mainColor: #21212e;
       --fontColor: #b04dff;
     }
+
     * {
       margin: 0;
       padding: 0;
@@ -31,44 +32,56 @@
 
     ul {
       display: flex;
+      /* margin-bottom: 50px; */
     }
+
     li {
       width: 220px;
       height: 80px;
       position: relative;
-      margin-right: 30px;
+      /* 下边框紧贴content上边框，2px是边框宽度 */
+      bottom: -2px;
+      /* 左右间距 */
+      margin-right: -15px;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #ffffff;
     }
+
+    /* 伪元素生成一个矩形 */
     li::after {
+      content: '';
       position: absolute;
       left: 0;
       right: 0;
       top: 0;
-      bottom: 8.5px;
-      content: '';
+      bottom: 0;
       z-index: -1;
-      transform-origin: top left;
-      transform: perspective(100px) rotateX(12deg);
+      /* 紧贴下边框 左边不动，效果右侧倾斜 */
+      transform-origin: bottom left;
+      /* Y方向上放大1.3倍大约和原来一致 */
+      transform: perspective(100px) rotateX(12deg) scaleY(1.3);
       border-radius: 10px 10px 0 0;
       background: #21212e;
-      
+
     }
+
     li.active {
       color: var(--fontColor);
     }
+
     li.active::after {
       z-index: 2;
       border: 2px solid transparent;
       border-bottom: none;
-      background-image: linear-gradient(var(--mainColor), var(--mainColor)), 
-                        linear-gradient(to bottom, #b04dff 10%, #743ba6 30%, #743ba6);
+      background-image: linear-gradient(var(--mainColor), var(--mainColor)),
+        linear-gradient(to bottom, #b04dff 10%, #743ba6 30%, #743ba6);
       background-clip: padding-box, border-box;
       background-origin: border-box;
     }
-    li > span {
+
+    li>span {
       position: absolute;
       z-index: 3;
     }
@@ -81,7 +94,7 @@
       border-radius: 0 10px 10px 10px;
       border: 2px solid transparent;
       background-image: linear-gradient(var(--mainColor), var(--mainColor)),
-                        linear-gradient(to bottom, #733aa5 10%, transparent 30%, transparent);
+        linear-gradient(to bottom, #733aa5 10%, transparent 30%, transparent);
       background-clip: padding-box, border-box;
       background-origin: border-box;
     }
@@ -99,7 +112,6 @@
     .loading.active {
       width: 500px;
     }
-
   </style>
   <script src="https://unpkg.com/vue@next"></script>
 </head>
@@ -116,13 +128,14 @@
       </li>
       <li>选项卡2</li>
     </ul>
+    <!-- 另一种方法：使用box-shadow -->
     <div class="content">
       <div class="loading" :class="{'active': isAni }"></div>
     </div>
   </div>
 
   <script>
-    const RootComponent = { 
+    const RootComponent = {
       data() {
         return {
           isAni: false,
@@ -132,7 +145,7 @@
         setTimeout(() => {
           this.isAni = true
         }, 1000)
-      } 
+      }
     }
     const app = Vue.createApp(RootComponent)
     const vm = app.mount('#app')
