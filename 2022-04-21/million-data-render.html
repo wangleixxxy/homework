@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- 渲染百万条结构简单的大数据时，怎么使用分片思想优化渲染 -->
+  <div id="app"></div>
+</body>
+<script>
+  // requestAnimationFrame: 下一次重绘之前，浏览器会调用回调函数
+  // createDocumentFragment：因为文档片段存在于内存中，并不在DOM树中，
+  // 所以将子元素插入到文档片段时不会引起页面回流（对元素位置和几何上的计算）。
+  // 因此，使用文档片段通常会带来更好的性能。
+  const container = document.querySelector("#app")
+  let total = 1000000
+  let pageSize = 100
+  let totalPage = Math.ceil(total / pageSize)
+  let index = 0
+
+  function loop() {
+    // 结束条件
+    if (index >= totalPage) return
+    window.requestAnimationFrame(() => {
+      let fragment = document.createDocumentFragment()
+      for (let i = 1; i <= pageSize; i++) {
+        let list = document.createElement("li")
+        list.innerText = i + pageSize * index
+        fragment.append(list) // 插入到文档片段中不会引起回流
+      }
+      container.appendChild(fragment)
+      index++
+      loop() // 继续调用直到index大于totalPage
+    })
+  }
+  // 递归调用
+  loop()
+</script>
+
+</html>
