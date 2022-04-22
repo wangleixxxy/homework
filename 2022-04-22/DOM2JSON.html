@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- 请实现 DOM2JSON 一个函数，可以把一个 DOM 节点输出 JSON 的格式 -->
+  <div id="app">
+    <div class="left">
+      <span>hello</span>
+      <span>world</span>
+    </div>
+    <div class="right">
+      <p>你好</p>世界
+    </div>
+  </div>
+</body>
+
+</html>
+<script>
+  let app = document.getElementById('app')
+  function dom2json(app) {
+    let obj = {}
+    obj.tagName = app.tagName
+    obj.className = app.className
+    obj.children = []
+    obj.content = ''
+    for (let i = 0; i < app.childNodes.length; i++) {
+      let child = app.childNodes[i]
+      if (child.nodeType === 1) {
+        obj.children.push(dom2json(child))
+      } else if (child.nodeType === 3) {
+        obj.content = (child.nodeValue || '').trim()
+      }
+    }
+    return obj
+  }
+  console.log(dom2json(app))
+</script>
