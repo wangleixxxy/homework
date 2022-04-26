@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <input type="file" @change="handleFileChange">
+    <button @click="handleUpload">上传</button>
+  </div>
+</body>
+
+</html>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+  const SIZE = 1024; // 切片大小 单位KB
+
+  new Vue({
+    el: '#app',
+    data: {
+      container: {
+        file: null
+      },
+      data: [],
+    },
+    methods: {
+      // 文件选择
+      handleFileChange(e) {
+        const [file] = e.target.files;
+        console.log('选择', e.target.files)
+        /*
+          lastModified: 1650556640625
+          lastModifiedDate: Thu Apr 21 2022 23:57:20 GMT+0800 (中国标准时间) {}
+          name: "test.png"
+          size: 92476
+          type: "image/png"
+          webkitRelativePath: ""
+        */
+        if (!file) return
+        this.container.file = file
+
+      },
+      async handleUpload() {
+        if (!this.container.file) return
+        // 文件切片列表 // file: Blob {size: 1024, type: ''}
+        const fileChunkList = this.createFileChunk(this.container.file)
+
+        this.data = fileChunkList.map(({ file }, index) => {
+          return {
+            chunk: file,
+            hash: this.container.file.name + "-" + index // 文件名 + 数组下标
+          }
+        })
+        await this.uploadFileChunk()
+      },
+      // 生成文件切片
+      createFileChunk(file, size = SIZE) {
+        const fileChunkList = []
+        let cur = 0
+        while (cur < file.size) {
+          fileChunkList.push({
+            file: file.slice(cur, cur + size),
+          })
+          cur += size
+        }
+        return fileChunkList
+      },
+      // 切片上传
+      uploadFileChunk() {
+        const requestList = this.data.map(({ chunk, hash }) => {
+          return new Promise((resolve, reject) => {
+            const formData = new FormData()
+            formData.append('file', chunk)
+            formData.append('hash', hash)
+            formData.append('name', this.container.file.name)
+            axios.post('xxx/upload', formData).then(res => {
+              resolve(res)
+            }).catch(err => {
+              reject(err)
+            })
+          })
+        })
+        Promise.all(requestList).then(res => {
+          console.log('上传成功', res)
+        }).catch(err => {
+          console.log('上传失败', err)
+        })
+      },
+    }
+  })
+</script>
