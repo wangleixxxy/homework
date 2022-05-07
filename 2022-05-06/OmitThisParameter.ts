@@ -8,7 +8,7 @@
  */
 
 function foo(this: { a: string }) {}
-foo(); // Error
+// foo(); // Error
 
 const bar = foo.bind({ a: 'BFE.dev' });
 bar(); // OK
