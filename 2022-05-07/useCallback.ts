@@ -22,6 +22,26 @@ function useCallback(callback, deps) {
   }
 }
 
+/*
+let hooksList = [];
+let hooksIndex = 0;
+function useCallback(fn,deps){
+    if(!deps) return fn;
+    if(hooksList.length>0){
+        let last = hooksList[hooksIndex-1];
+        let same = last[1].every((item,index)=>item === deps[index]);
+        if(same){
+            return last[0];
+        }else{
+            hooksList[hooksIndex++] = [fn,deps];
+            return fn
+        }
+    }else{
+        hooksList[hooksIndex++] = [fn,deps];
+        return fn
+    }
+}
+*/
 // function mountCallback<T>(callback: T, deps: Array<mixed> | void | null): T {
 //   const hook = mountWorkInProgressHook();
 
