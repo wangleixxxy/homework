@@ -27,6 +27,28 @@ function useMemo(nextCreate, deps) {
   }
 }
 
+/*
+let hooksList = [];
+let hooksIndex = 0;
+function useMemo(fn,deps){
+    if(!deps) return fn();
+    if(hooksList.length>0){
+        let last = hooksList[hooksIndex-1];
+        let same = last[1].every((item,index)=>item === deps[index]);
+        if(same){
+            return last[0];
+        }else{
+            let result = fn();
+            hooksList[hooksIndex++] = [result,deps];
+            return result
+        }
+    }else{
+        let result = fn();
+        hooksList[hooksIndex++] = [result,deps];
+        return result
+    }
+}
+*/
 // function mountMemo<T>(
 //   nextCreate: () => T,
 //   deps: Array<mixed> | void | null
