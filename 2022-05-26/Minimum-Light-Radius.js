@@ -29,7 +29,7 @@ class Solution {
           end = nums[i] + range
         }
       }
-      return ct <= 2 // 如果当前路灯的个数小于等于2，则满足要求
+      return ct <= 2 // 当前一盏灯，再加2个路灯，就能覆盖所有的房子，符合要求就返回
     }
   }
 }
